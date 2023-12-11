@@ -1,6 +1,6 @@
 const initialState = {
     projectList: [
-        { id: '1', projectName: '123', description: '<p> 123 </p>' }
+
     ]
 }
 
@@ -11,10 +11,10 @@ export const ProjectCyberBugsReducer = (state = initialState, action) => {
             {
                 state.projectList = action.projectList
 
-                return {...state }
+                return { ...state }
             }
 
         default:
-            return {...state }
+            return { ...state }
     }
 }

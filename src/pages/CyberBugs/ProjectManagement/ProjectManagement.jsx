@@ -1,13 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import ReactHtmlParser from "react-html-parser";
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Button, Space, Table } from 'antd';
+import { Button, Space, Table, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
+import FormEditProject from '../../../components/Form/FormEditProject';
 
 
 
 export default function ProjectManagement() {
     const projectList = useSelector(state => state.ProjectCyberBugsReducer.projectList);
+    const { ComponentContentDrawer } = useSelector(state => state.DrawerReducer);
+
     const dispatch = useDispatch();
     const [state, setState] = useState({
         filteredInfo: null,
@@ -19,7 +22,12 @@ export default function ProjectManagement() {
             type: 'GET_ALL_PROJECT_SAGA'
         })
     }, [])
-
+    const showDrawer = () => {
+        return dispatch({
+            type: 'OPEN_FORM_EDIT',
+            Component: <FormEditProject />
+        })
+    };
 
     const handleChange = (pagination, filters, sorter) => {
         console.log('Various parameters', pagination, filters, sorter);
@@ -57,26 +65,56 @@ export default function ProjectManagement() {
             title: 'id',
             dataIndex: 'id',
             key: 'id',
-
+            sorter: (item2, item1) => {
+                return item2.id - item1.id;
+            },
+            sortDirections: ['descend'],
 
         },
         {
             title: 'projectName',
             dataIndex: 'projectName',
             key: 'projectName',
+            sorter: (item2, item1) => {
+                let projectName1 = item1.projectName?.trim().toLowerCase();
+                let projectName2 = item2.projectName?.trim().toLowerCase();
+                if (projectName2 < projectName1) {
+                    return -1;
+                }
+                return 1;
+            },
+
+        },
+
+        {
+            title: 'category',
+            dataIndex: 'categoryName',
+            key: 'categoryName',
+            sorter: (item2, item1) => {
+                let categoryName1 = item1.categoryName?.trim().toLowerCase();
+                let categoryName2 = item2.categoryName?.trim().toLowerCase();
+                if (categoryName2 < categoryName1) {
+                    return -1;
+                }
+                return 1;
+            },
 
         },
         {
-            title: 'description',
-            dataIndex: 'description',
-            key: 'description',
+            title: 'creator',
+            // dataIndex: 'description',
+            key: 'creator',
             render: (text, record, index) => {
-                let contentJSX = ReactHtmlParser(text);
-
-                return <div>
-                    {contentJSX}
-                </div>
-            }
+                return <Tag color="green">{record.creator?.name}</Tag>
+            },
+            sorter: (item2, item1) => {
+                let creator1 = item1.creator?.name.trim().toLowerCase();
+                let creator2 = item2.creator?.name.trim().toLowerCase();
+                if (creator2 < creator1) {
+                    return -1;
+                }
+                return 1;
+            },
         },
         {
             title: 'Action',
@@ -84,7 +122,16 @@ export default function ProjectManagement() {
             key: 'x',
             render: (text, record, index) => {
                 return <div>
-                    <button className="btn mr-2 btn-primary">
+                    <button className="btn mr-2 btn-primary" onClick={() => {
+                        dispatch({
+                            type: 'OPEN_FORM_EDIT',
+                            Component: <FormEditProject />
+                        })
+                        dispatch({
+                            type: 'OPEN_EDIT_PROJECT',
+                            projectEditModel: record
+                        })
+                    }}>
                         <FormOutlined style={{ fontSize: 17 }} />
                     </button>
                     <button className="btn btn-danger">

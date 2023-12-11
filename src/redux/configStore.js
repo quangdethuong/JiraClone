@@ -13,6 +13,8 @@ import reduxThunk from 'redux-thunk'
 import createMiddleWareSaga from 'redux-saga';
 import { rootSaga } from './sagas/rootSaga';
 import { ProjectCyberBugsReducer } from './reducers/ProjectCyberBugsReducer';
+import DrawerReducer from './reducers/DrawerReducer';
+import ProjectEditReducer from './reducers/ProjectEditReducer';
 const middleWareSaga = createMiddleWareSaga();
 
 
@@ -24,6 +26,8 @@ const rootReducer = combineReducers({
     UserLoginCyberBugsReducer,
     ProjectCategoryReducer,
     ProjectCyberBugsReducer,
+    DrawerReducer,
+    ProjectEditReducer,
 })
 
 const store = createStore(rootReducer, applyMiddleware(reduxThunk, middleWareSaga));

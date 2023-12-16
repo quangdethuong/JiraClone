@@ -32,6 +32,9 @@ function FormEditProject(props) {
 
         //Gọi api load project category 
         dispatch({ type: 'GET_ALL_PROJECT_CATEGORY_SAGA' })
+
+        //Load sự kiện submit lên drawer nút submit
+        dispatch({ type: 'SET_SUBMIT_EDIT_PROJECT', submitFunction: handleSubmit });
     }, [])
 
     const handleEditorChange = (content, editor) => {
@@ -52,13 +55,13 @@ function FormEditProject(props) {
                 <div className="col-4">
                     <div className="form-group">
                         <p className="font-weight-bold">Project name</p>
-                        <input value={values.projectName} className="form-control" name="projectName" />
+                        <input value={values.projectName} className="form-control" name="projectName" onChange={handleChange} />
                     </div>
                 </div>
                 <div className="col-4">
                     <div className="form-group">
                         <p className="font-weight-bold">Project Category</p>
-                        <select className="form-control" name="categoryId" value={values.categoryId}>
+                        <select onChange={handleChange} className="form-control" name="categoryId" value={values.categoryId}>
                             {arrayCategory?.map((item, index) => {
                                 return <option key={index} value={item.id}>
                                     {item.projectCategoryName}
@@ -119,8 +122,11 @@ const openEditProject = withFormik({
 
     }),
     handleSubmit: (values, { props, setSubmitting }) => {
-
-
+        const action = {
+            type: 'UPDATE_PROJECT_SAGA',
+            projectUpdate: values
+        }
+        props.dispatch(action);
 
 
     },

@@ -41,18 +41,18 @@ function App() {
       <DrawerCyberBugs />
       <Switch>
 
-        {/* <Route exact path='/home'  render={(propsRoute)=>{
+        {/* <Route exact path='/home' render={(propsRoute) => {
           return <div>
-                <Header />
-                <Home {...propsRoute} />
+            <Header />
+            <Home {...propsRoute} />
           </div>
-        }}/> */}
+        }} /> */}
 
-        {/* <HomeTemplate path="/home" exact Component={Home} />
 
-        <HomeTemplate exact path='/contact' Component={Contact} />
+
+
+        {/* <HomeTemplate exact path='/contact' Component={Contact} />
         <HomeTemplate exact path='/about' Component={About} />
-        <UserLoginTemplate exact path='/login' Component={LoginCyberBugs} />
         <HomeTemplate exact path='/detail/:id' Component={Detail} />
         <HomeTemplate exact path='/profile' Component={Profile} />
         <HomeTemplate exact path='/todolistrfc' Component={TodolistRFC} />
@@ -63,8 +63,11 @@ function App() {
         <CyberBugsTemplate exact path='/cyberbugs' Component={IndexCyberBugs} />
         <CyberBugsTemplate exact path='/createproject' Component={CreateProject} />
         <CyberBugsTemplate exact path='/project' Component={ProjectManagement} />
+
+        <UserLoginTemplate exact path='/login' Component={LoginCyberBugs} />
+        <CyberBugsTemplate path="/home" exact Component={IndexCyberBugs} />
         <CyberBugsTemplate exact path='/' Component={IndexCyberBugs} />
-        <CyberBugsTemplate path="*" Component={PageNotFound} />
+        <CyberBugsTemplate path="*" component={PageNotFound} />
 
       </Switch>
 

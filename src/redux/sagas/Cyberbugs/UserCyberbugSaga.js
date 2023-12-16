@@ -2,8 +2,9 @@ import { call, delay, fork, take, takeEvery, takeLatest, put } from 'redux-saga/
 import { USER_SIGNIN_API } from '../../constants/Cyberbugs/Cyberbugs';
 import { DISPLAY_LOADING, HIDE_LOADING } from '../../constants/LoadingConst';
 import { cyberBugsService } from '../../../services/CyberBugsService';
-import { TOKEN, USER_LOGIN } from '../../../util/constants/settingSystem';
+import { STATUS_CODE, TOKEN, USER_LOGIN } from '../../../util/constants/settingSystem';
 import { history } from '../../../util/history';
+import { userService } from '../../../services/UserService';
 
 
 function* signinSaga(action) {
@@ -29,4 +30,56 @@ function* signinSaga(action) {
 
 export function* theoDoiSignIn() {
     yield takeLatest(USER_SIGNIN_API, signinSaga);
+}
+
+
+//delete
+function* getUserSaga(action) {
+
+
+    try {
+        const { data, status } = yield call(() => userService.getUser(action.keyword));
+        //Gọi api thành công thì dispatch lên reducer thông qua put
+        console.log('data user search: ', data);
+        yield put({
+            type: 'GET_USER_SEARCH',
+            lstUserSearch: data.content
+        })
+    } catch (err) {
+
+        console.log(err.response.data);
+    }
+
+    yield put({
+        type: HIDE_LOADING
+    })
+}
+
+
+export function* theoDoiGetUser() {
+    yield takeLatest('GET_USER_API', getUserSaga);
+}
+
+
+//Quản lý các action saga
+function* addUserProjectSaga(action) {
+
+
+    try {
+        const { data, status } = yield call(() => userService.assignUserProject(action.userProject));
+
+
+        yield put({
+            type: 'GET_ALL_PROJECT_SAGA'
+        })
+
+    } catch (err) {
+        console.log(err.response.data)
+    }
+}
+
+
+
+export function* theoDoiAddUserProject() {
+    yield takeLatest('ADD_USER_PROJECT_API', addUserProjectSaga);
 }

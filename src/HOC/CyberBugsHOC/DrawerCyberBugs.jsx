@@ -4,7 +4,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 
 const DrawerCyberBugs = () => {
-    const { visible, ComponentContentDrawer, callSubmitForm } = useSelector(state => state.DrawerReducer)
+    const { visible, ComponentContentDrawer, callBackSubmit } = useSelector(state => state.DrawerReducer)
     const dispatch = useDispatch();
 
     const showDrawer = () => {
@@ -39,7 +39,7 @@ const DrawerCyberBugs = () => {
                         <Button onClick={onClose} style={{ marginRight: 8 }}>
                             Cancel
                         </Button>
-                        <Button type="primary">
+                        <Button type="primary" onClick={callBackSubmit}>
                             Submit
                         </Button>
                     </div>

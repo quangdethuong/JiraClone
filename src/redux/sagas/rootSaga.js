@@ -22,9 +22,15 @@ export function* rootSaga() {
         ToDoListSaga.theoDoiRejectTask(),
         //Nghiệp vu CyberBugs
         Cyberbugs.theoDoiSignIn(),
+        Cyberbugs.theoDoiGetUser(),
+        Cyberbugs.theoDoiAddUserProject(),
         ProjectCategory.theoDoiGetAllProjectCategory(),
         ProjectCyberBugs.theoDoiCreateProject(),
-        ProjectCyberBugs.theoDoiGetAllProject()
+        ProjectCyberBugs.theoDoiGetAllProject(),
+        ProjectCyberBugs.theoDoiUpdateProject(),
+        ProjectCyberBugs.theoDoiDeleteProject(),
+
+
     ])
 
 

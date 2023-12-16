@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import ReactHtmlParser from "react-html-parser";
 import { FormOutlined, DeleteOutlined } from '@ant-design/icons'
-import { Button, Space, Table, Tag } from 'antd';
+import { AutoComplete, Avatar, Button, Popconfirm, Popover, Space, Table, Tag } from 'antd';
 import { useDispatch, useSelector } from 'react-redux';
 import FormEditProject from '../../../components/Form/FormEditProject';
 
@@ -11,6 +11,9 @@ export default function ProjectManagement() {
     const projectList = useSelector(state => state.ProjectCyberBugsReducer.projectList);
     const { ComponentContentDrawer } = useSelector(state => state.DrawerReducer);
 
+    const { userSearch } = useSelector(state => state.UserLoginCyberBugsReducer)
+
+    const [value, setValue] = useState('');
     const dispatch = useDispatch();
     const [state, setState] = useState({
         filteredInfo: null,
@@ -117,6 +120,58 @@ export default function ProjectManagement() {
             },
         },
         {
+            title: 'members',
+            key: 'members',
+            render: (text, record, index) => {
+                return <div>
+                    {record.members?.slice(0, 3).map((member, index) => {
+                        return <Avatar key={index} src={member.avatar} />
+                    })}
+
+                    {record.members?.length > 3 ? <Avatar>...</Avatar> : ''}
+
+                    <Popover placement="rightTop" title={"Add user"} content={() => {
+                        return <AutoComplete
+
+                            options={userSearch?.map((user, index) => {
+                                return { label: user.name, value: user.userId.toString() }
+                            })}
+
+                            value={value}
+
+                            onChange={(text) => {
+                                setValue(text);
+                            }}
+
+                            onSelect={(valueSelect, option) => {
+                                //set giá trị của hộp thọa = option.label
+                                setValue(option.label);
+                                //Gọi api gửi về backend
+                                dispatch({
+                                    type: 'ADD_USER_PROJECT_API',
+                                    userProject: {
+                                        "projectId": record.id,
+                                        "userId": valueSelect
+                                    }
+                                })
+
+
+                            }}
+                            style={{ width: '100%' }} onSearch={(value) => {
+                                dispatch({
+                                    type: 'GET_USER_API',
+                                    keyword: value
+                                })
+
+                            }} />
+                    }} trigger="click">
+                        <Button style={{ borderRadius: '50%' }}>+</Button>
+                    </Popover>
+                </div>
+            }
+
+        },
+        {
             title: 'Action',
             dataIndex: '',
             key: 'x',
@@ -134,9 +189,21 @@ export default function ProjectManagement() {
                     }}>
                         <FormOutlined style={{ fontSize: 17 }} />
                     </button>
-                    <button className="btn btn-danger">
-                        <DeleteOutlined style={{ fontSize: 17 }} />
-                    </button>
+
+
+                    <Popconfirm
+                        title="Are you sure to delete this project?"
+                        onConfirm={() => {
+                            dispatch({ type: 'DELETE_PROJECT_SAGA', idProject: record.id })
+                        }}
+
+                        okText="Yes"
+                        cancelText="No"
+                    >
+                        <button className="btn btn-danger">
+                            <DeleteOutlined style={{ fontSize: 17 }} />
+                        </button>
+                    </Popconfirm>,
                 </div>
             },
         }
